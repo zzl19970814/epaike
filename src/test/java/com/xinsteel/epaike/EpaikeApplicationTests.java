@@ -8,6 +8,7 @@ class EpaikeApplicationTests {
 
     @Test
     void contextLoads() {
+        System.out.println("dksjfaskdf ");
     }
 
 }
