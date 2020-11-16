@@ -91,6 +91,7 @@ public class SendMethods {
             // 获取eOrder
             JSONObject eOrder = messageBody.getJSONObject("eOrder");
             // 订单Id
+            //判断orderId是否为空，为空不调用，不为空就调用
             String orderId = eOrder.get("orderid").toString();
             // 创建时间
             String createtime = eOrder.getString("createtime");
