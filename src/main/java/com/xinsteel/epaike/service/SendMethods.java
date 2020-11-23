@@ -313,7 +313,7 @@ public class SendMethods {
 
         data.put("purchasecompanyid", getYiPaiKeOrderInfo(orderId).get("purchasecompanyid"));
         data.put("suppliercompanyid", ConstantPropertiesUtils.COMPANY_ID);
-
+        data.put("skiperp", 1);
 
         // ============================================
 
