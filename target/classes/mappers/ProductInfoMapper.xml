@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinsteel.epaike.dao.ProductInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.xinsteel.epaike.pojo.ProductInfo" >
+    <constructor >
+      <arg column="apimaterNo" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="apimaterName" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="productSkuId" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="orderId" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="productQuantity" jdbcType="DECIMAL" javaType="java.math.BigDecimal" />
+      <arg column="productName" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="productFileName" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="productImageUrl" jdbcType="VARCHAR" javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
+  <insert id="insert" parameterType="com.xinsteel.epaike.pojo.ProductInfo" >
+    insert into productinfo (apimaterNo, apimaterName, productSkuId, 
+      orderId, productQuantity, productName, 
+      productFileName, productImageUrl)
+    values (#{apimaterno,jdbcType=VARCHAR}, #{apimatername,jdbcType=VARCHAR}, #{productskuid,jdbcType=BIGINT}, 
+      #{orderid,jdbcType=VARCHAR}, #{productquantity,jdbcType=DECIMAL}, #{productname,jdbcType=VARCHAR}, 
+      #{productfilename,jdbcType=VARCHAR}, #{productimageurl,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.xinsteel.epaike.pojo.ProductInfo" >
+    insert into productinfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="apimaterno != null" >
+        apimaterNo,
+      </if>
+      <if test="apimatername != null" >
+        apimaterName,
+      </if>
+      <if test="productskuid != null" >
+        productSkuId,
+      </if>
+      <if test="orderid != null" >
+        orderId,
+      </if>
+      <if test="productquantity != null" >
+        productQuantity,
+      </if>
+      <if test="productname != null" >
+        productName,
+      </if>
+      <if test="productfilename != null" >
+        productFileName,
+      </if>
+      <if test="productimageurl != null" >
+        productImageUrl,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="apimaterno != null" >
+        #{apimaterno,jdbcType=VARCHAR},
+      </if>
+      <if test="apimatername != null" >
+        #{apimatername,jdbcType=VARCHAR},
+      </if>
+      <if test="productskuid != null" >
+        #{productskuid,jdbcType=BIGINT},
+      </if>
+      <if test="orderid != null" >
+        #{orderid,jdbcType=VARCHAR},
+      </if>
+      <if test="productquantity != null" >
+        #{productquantity,jdbcType=DECIMAL},
+      </if>
+      <if test="productname != null" >
+        #{productname,jdbcType=VARCHAR},
+      </if>
+      <if test="productfilename != null" >
+        #{productfilename,jdbcType=VARCHAR},
+      </if>
+      <if test="productimageurl != null" >
+        #{productimageurl,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>
