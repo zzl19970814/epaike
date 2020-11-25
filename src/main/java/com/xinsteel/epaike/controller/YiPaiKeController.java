@@ -87,6 +87,14 @@ public class YiPaiKeController {
     }
 
     /**
+     * 原材料仓储
+     */
+    @GetMapping("/saveEnterpriseMateriaPlace")
+    public void saveEnterpriseMateriaPlace(){
+        SendMethods.saveEnterpriseMateriaPlace();
+    }
+
+    /**
      * 视频地址上传接口
      * 随时可以调用且只需调用一次
      */
@@ -117,7 +125,7 @@ public class YiPaiKeController {
      * 合同签订概况接口
      * getMessage后调用
      */
-    @GetMapping("/saveOrderContractInfo")
+        @GetMapping("/saveOrderContractInfo")
     public void saveOrderContractInfo(){
         SendMethods.autoSaveContractInfo();
     }
@@ -138,8 +146,8 @@ public class YiPaiKeController {
     @GetMapping("/saveOrderMapConfigure")
     public void saveOrderMapConfigure(){
         // 加个生产过程nodecode5 nodename为生产制造
-        int [] nodeCodes = new int[] {1,2,3,4,19,20};
-        String [] nodeNames = new String[]{"合同签订","工程设计","采购","排产计划","入库","物流"};
+        int [] nodeCodes = new int[] {1,2,3,4,5,19,20};
+        String [] nodeNames = new String[]{"合同签订","工程设计","采购","排产计划","生产制造","入库","物流"};
         for (int i = 0; i < nodeCodes.length; i++) {
             SendMethods.saveOrderMapConfigure(nodeNames[i], nodeCodes[i]);
         }
@@ -154,6 +162,13 @@ public class YiPaiKeController {
         SendMethods.autoSaveMapSchedule();
     }
 
+    /**
+     * 雷达图视频
+     */
+    @GetMapping("/saveOrderMapVideo")
+    public void saveOrderMapVideo(){
+        SendMethods.saveOrderMapVideo();
+    }
 
     /**
      * 雷达图工程设计信息
@@ -229,6 +244,23 @@ public class YiPaiKeController {
     public void saveShipmentImageFile(){
         SendMethods.autoSaveShipmentImageFile();
     }
+
+    /**
+     * 订单产品展示信息上传接口
+     */
+    @GetMapping("/saveOrderProductInfoNo3d")
+    public void saveOrderProductInfoNo3d(){
+        SendMethods.autoSaveOrderProductInfoNo3d();
+    }
+
+    /**
+     * 物流跟踪信息上传接口
+     */
+    @GetMapping("/saveOrderLogisticsInfo")
+    public void saveOrderLogisticsInfo(){
+        SendMethods.autoSaveOrderLogisticsInfo();
+    }
+
 
 
 
