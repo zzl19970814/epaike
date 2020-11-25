@@ -125,7 +125,7 @@ public class YiPaiKeController {
      * 合同签订概况接口
      * getMessage后调用
      */
-        @GetMapping("/saveOrderContractInfo")
+    @GetMapping("/saveOrderContractInfo")
     public void saveOrderContractInfo(){
         SendMethods.autoSaveContractInfo();
     }

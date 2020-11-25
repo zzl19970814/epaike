@@ -146,7 +146,7 @@ public class SendMethods {
     public static void startSaveErpNo() throws Exception {
 
         for (Map<String, String> orderInfo:
-        Message_List){
+                Message_List){
             String orderId = orderInfo.get("orderId");
             boolean b = saveEnterpriseErpOrderNo(orderId);
             if(!b){
@@ -345,7 +345,7 @@ public class SendMethods {
      */
     public static void autoSavePlaceInfo(){
         for (String s : API_MATER_NO_LIST
-             ) {
+        ) {
             saveEnterprisePlaceInfo(s);
         }
     }
@@ -376,7 +376,7 @@ public class SendMethods {
      */
     public static void autoSaveMaterial(){
         for (String s : API_MATER_NO_LIST
-             ) {
+        ) {
             saveEnterpriseMaterial(s);
         }
     }
@@ -469,7 +469,7 @@ public class SendMethods {
      */
     public static void autoSaveImageFile(){
         for (String s : API_MATER_NO_LIST
-             ) {
+        ) {
             saveEnterpriseImageFile(s);
         }
     }
@@ -531,7 +531,7 @@ public class SendMethods {
      */
     public static void autoSaveSurveyInfo(){
         for (Map<String, String> orderInfo : Message_List
-             ) {
+        ) {
             String orderId = orderInfo.get("orderId");
             saveOrderSurveyInfo(orderId);
         }
@@ -999,7 +999,7 @@ public class SendMethods {
     /**
      * 生产制造过程概况接口
      */
-        public static void saveOrderManufacturingProcess(String orderId){
+    public static void saveOrderManufacturingProcess(String orderId){
         Map<String, Object> data = new HashMap<>();
         data.put("orderId",orderId);
         data.put("purchasecompanyid", getYiPaiKeOrderInfo(orderId).get("purchasecompanyid"));
