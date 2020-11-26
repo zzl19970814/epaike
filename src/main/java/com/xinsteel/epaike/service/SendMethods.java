@@ -5,17 +5,37 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.pcitc.apiapplication.service.api.dto.EpecResult;
 import com.pcitc.apiapplication.service.api.ssl.EpecApiUtil;
+import com.xinsteel.epaike.dao.OrderInfoMapper;
+import com.xinsteel.epaike.pojo.OrderInfo;
 import com.xinsteel.epaike.utils.ConstantPropertiesUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.text.SimpleDateFormat;
-import java.time.DateTimeException;
 import java.util.*;
 
+
+@Component
 public class SendMethods {
 
     private static String ACCESS_TOKEN;
     private static List<Map<String, String>> Message_List ;
     private static List<String> API_MATER_NO_LIST = new ArrayList<>();
+//  private static Logger LOGGER = (Logger) LoggerFactory.getLogger(SendMethods.class);
+
+    @Autowired
+    private OrderInfoMapper orderInfoMapper;
+
+    private static SendMethods codeMapUtils;
+
+    @PostConstruct
+    public void init() {
+        codeMapUtils = this;
+        codeMapUtils.orderInfoMapper = this.orderInfoMapper;
+    }
+
+
 
 
     /**
@@ -165,7 +185,11 @@ public class SendMethods {
         Map<String, Object> data = new HashMap<>();
         data.put("corpcode", ConstantPropertiesUtils.CLIENT_ID);
 
-        String erpOrderNo = "20201109";
+        OrderInfo orderInfo = new OrderInfo();
+
+        orderInfo = codeMapUtils.orderInfoMapper.selectByPrimaryKey(orderId);
+
+        String erpOrderNo = orderInfo.getErporderno();
 
         data.put("erpOrderNo", erpOrderNo);
 
@@ -175,8 +199,8 @@ public class SendMethods {
         System.out.println(Message_List.toString());
 
         data.put("orderId", orderId);
-        data.put("purchasecompanyid", getYiPaiKeOrderInfo(orderId).get("purchasecompanyid"));
-
+//        data.put("purchasecompanyid", getYiPaiKeOrderInfo(orderId).get("purchasecompanyid"));
+        data.put("purchasecompanyid",orderInfo.getPurchasecompanyid());
         String url = "/v2/supplychain/saveEnterpriseErpOrderNo";
 
         JSONObject jsonObj=new JSONObject(data);
