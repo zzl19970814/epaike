@@ -18,6 +18,7 @@ import javax.net.ssl.*;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
@@ -137,7 +138,10 @@ public class SSLRequest {
         BufferedReader in = null;
         String result = "";
         try {
-            // URLEncoder.encode(param,"UTF-8");
+            /*if (param!=null){
+
+                URLEncoder.encode(param,"UTF-8");
+            }*/
 
             URL realUrl = new URL(url);
             URLConnection conn = realUrl.openConnection();
