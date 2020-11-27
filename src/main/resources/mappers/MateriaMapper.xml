@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinsteel.epaike.dao.MateriaMapper" >
+  <resultMap id="BaseResultMap" type="com.xinsteel.epaike.pojo.Materia" >
+    <constructor>
+      <arg column="apimaterNo" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="materialNo" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="materialName" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="supplierCompanyName" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="quantity" jdbcType="DECIMAL" javaType="java.math.BigDecimal" />
+      <arg column="materialUnit" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="materialQuantity" jdbcType="DECIMAL" javaType="java.math.BigDecimal" />
+      <arg column="rawMaterialOfUse" jdbcType="DECIMAL" javaType="java.math.BigDecimal" />
+      <arg column="specifications" jdbcType="VARCHAR" javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
+  <insert id="insert" parameterType="com.xinsteel.epaike.pojo.Materia" >
+    insert into materia (apimaterNo, materialNo, materialName, 
+      supplierCompanyName, quantity, materialUnit, 
+      materialQuantity, rawMaterialOfUse, specifications
+      )
+    values (#{apimaterno,jdbcType=VARCHAR}, #{materialno,jdbcType=VARCHAR}, #{materialname,jdbcType=VARCHAR}, 
+      #{suppliercompanyname,jdbcType=VARCHAR}, #{quantity,jdbcType=DECIMAL}, #{materialunit,jdbcType=VARCHAR}, 
+      #{materialquantity,jdbcType=DECIMAL}, #{rawmaterialofuse,jdbcType=DECIMAL}, #{specifications,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.xinsteel.epaike.pojo.Materia" >
+    insert into materia
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="apimaterno != null" >
+        apimaterNo,
+      </if>
+      <if test="materialno != null" >
+        materialNo,
+      </if>
+      <if test="materialname != null" >
+        materialName,
+      </if>
+      <if test="suppliercompanyname != null" >
+        supplierCompanyName,
+      </if>
+      <if test="quantity != null" >
+        quantity,
+      </if>
+      <if test="materialunit != null" >
+        materialUnit,
+      </if>
+      <if test="materialquantity != null" >
+        materialQuantity,
+      </if>
+      <if test="rawmaterialofuse != null" >
+        rawMaterialOfUse,
+      </if>
+      <if test="specifications != null" >
+        specifications,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="apimaterno != null" >
+        #{apimaterno,jdbcType=VARCHAR},
+      </if>
+      <if test="materialno != null" >
+        #{materialno,jdbcType=VARCHAR},
+      </if>
+      <if test="materialname != null" >
+        #{materialname,jdbcType=VARCHAR},
+      </if>
+      <if test="suppliercompanyname != null" >
+        #{suppliercompanyname,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null" >
+        #{quantity,jdbcType=DECIMAL},
+      </if>
+      <if test="materialunit != null" >
+        #{materialunit,jdbcType=VARCHAR},
+      </if>
+      <if test="materialquantity != null" >
+        #{materialquantity,jdbcType=DECIMAL},
+      </if>
+      <if test="rawmaterialofuse != null" >
+        #{rawmaterialofuse,jdbcType=DECIMAL},
+      </if>
+      <if test="specifications != null" >
+        #{specifications,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>
