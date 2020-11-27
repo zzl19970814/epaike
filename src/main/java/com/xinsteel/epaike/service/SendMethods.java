@@ -6,7 +6,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.pcitc.apiapplication.service.api.dto.EpecResult;
 import com.pcitc.apiapplication.service.api.ssl.EpecApiUtil;
 import com.xinsteel.epaike.dao.OrderInfoMapper;
+import com.xinsteel.epaike.dao.ProductInfoMapper;
 import com.xinsteel.epaike.pojo.OrderInfo;
+import com.xinsteel.epaike.pojo.ProductInfo;
 import com.xinsteel.epaike.utils.ConstantPropertiesUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,17 +24,20 @@ public class SendMethods {
     private static String ACCESS_TOKEN;
     private static List<Map<String, String>> Message_List ;
     private static List<String> API_MATER_NO_LIST = new ArrayList<>();
-//  private static Logger LOGGER = (Logger) LoggerFactory.getLogger(SendMethods.class);
+
+    @Autowired
+    private ProductInfoMapper productInfoMapper;
 
     @Autowired
     private OrderInfoMapper orderInfoMapper;
 
-    private static SendMethods codeMapUtils;
+    private static SendMethods sendMethods;
 
     @PostConstruct
     public void init() {
-        codeMapUtils = this;
-        codeMapUtils.orderInfoMapper = this.orderInfoMapper;
+        sendMethods = this;
+        sendMethods.orderInfoMapper = this.orderInfoMapper;
+        sendMethods.productInfoMapper = this.productInfoMapper;
     }
 
 
@@ -187,7 +192,7 @@ public class SendMethods {
 
         OrderInfo orderInfo = new OrderInfo();
 
-        orderInfo = codeMapUtils.orderInfoMapper.selectByPrimaryKey(orderId);
+        orderInfo = sendMethods.orderInfoMapper.selectByPrimaryKey(orderId);
 
         String erpOrderNo = orderInfo.getErporderno();
 
@@ -199,7 +204,6 @@ public class SendMethods {
         System.out.println(Message_List.toString());
 
         data.put("orderId", orderId);
-//        data.put("purchasecompanyid", getYiPaiKeOrderInfo(orderId).get("purchasecompanyid"));
         data.put("purchasecompanyid",orderInfo.getPurchasecompanyid());
         String url = "/v2/supplychain/saveEnterpriseErpOrderNo";
 
@@ -213,7 +217,6 @@ public class SendMethods {
         String utilStr = utils(url, params);
 
         return utilStr.equals("true");
-
     }
 
 
@@ -221,30 +224,15 @@ public class SendMethods {
      * 根据查询出来的易派客单品id上传供应商对应的商品id和名称
      */
     public static void uploadMaterInfo(){
-
-        // 测试可用
-//        getAccessTocken();
-//        getMessage();
-
-        for (Map<String, String> orderInfo:
-                Message_List){
-            String productSkuId = orderInfo.get("productskuid");
-
-            // TODO 根据单品id查找供应商对应的商品id和名称
-
-            String apiMaterName = "A商品";
-            String apiMaterNo = "2020";
-
-            API_MATER_NO_LIST.add(apiMaterNo);
-
-            orderInfo.put("apiMaterNo", apiMaterNo);
-            orderInfo.put("apiMaterName", apiMaterName);
-
-            if(productSkuId.equals("79000012")) {
-
+        List<ProductInfo> resultList = sendMethods.productInfoMapper.selectAllProductInfo();
+        for (ProductInfo productInfo:
+                resultList){
+            Long productSkuId = productInfo.getProductskuid();
+            String apiMaterName = productInfo.getApimatername();
+            String apiMaterNo = productInfo.getApimaterno();
+            if(productSkuId==79000012) {
                 saveEnterpriseMaterInfo(apiMaterName,apiMaterNo, productSkuId);
             }
-
         }
     }
 
@@ -255,7 +243,7 @@ public class SendMethods {
      * @param productSkuId 易派客单品id
      * @return
      */
-    public static String saveEnterpriseMaterInfo(String apiMaterName, String apiMaterNo, String productSkuId) {
+    public static String saveEnterpriseMaterInfo(String apiMaterName, String apiMaterNo, Long productSkuId) {
         // data 的json
         Map<String, Object> data = new HashMap<>();
         data.put("corpcode", ConstantPropertiesUtils.CLIENT_ID);
@@ -277,9 +265,6 @@ public class SendMethods {
         String utilsStr = utils(url, params);
 
         return utilsStr;
-
-
-
     }
 
     /**

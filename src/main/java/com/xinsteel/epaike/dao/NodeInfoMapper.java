@@ -1,7 +1,9 @@
 package com.xinsteel.epaike.dao;
 
 import com.xinsteel.epaike.pojo.NodeInfo;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface NodeInfoMapper {
     int deleteByPrimaryKey(String orderid);
 

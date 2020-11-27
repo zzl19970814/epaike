@@ -13,19 +13,16 @@ public class ProductInfo {
 
     private BigDecimal productquantity;
 
-    private String productname;
-
     private String productfilename;
 
     private String productimageurl;
 
-    public ProductInfo(String apimaterno, String apimatername, Long productskuid, String orderid, BigDecimal productquantity, String productname, String productfilename, String productimageurl) {
+    public ProductInfo(String apimaterno, String apimatername, Long productskuid, String orderid, BigDecimal productquantity,  String productfilename, String productimageurl) {
         this.apimaterno = apimaterno;
         this.apimatername = apimatername;
         this.productskuid = productskuid;
         this.orderid = orderid;
         this.productquantity = productquantity;
-        this.productname = productname;
         this.productfilename = productfilename;
         this.productimageurl = productimageurl;
     }
@@ -72,14 +69,6 @@ public class ProductInfo {
 
     public void setProductquantity(BigDecimal productquantity) {
         this.productquantity = productquantity;
-    }
-
-    public String getProductname() {
-        return productname;
-    }
-
-    public void setProductname(String productname) {
-        this.productname = productname == null ? null : productname.trim();
     }
 
     public String getProductfilename() {
