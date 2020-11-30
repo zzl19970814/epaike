@@ -73,4 +73,13 @@
   <select id="selectAllProductInfo" resultMap="ProductInfo">
     SELECT *FROM productinfo
   </select>
+
+  <select id="selectApiMaterNoListByOrderId" resultType="java.util.List">
+    SELECT apimaterNo FROM productinfo
+    WHERE orderId = #{orderId}
+  </select>
+  <select id="selectProductInfoByApiMaterNo" resultMap="ProductInfo">
+    SELECT * FROM productinfo
+    WHERE apimaterNo = #{apiMaterNo}
+  </select>
 </mapper>

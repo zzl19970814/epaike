@@ -64,6 +64,8 @@ public class OrderInfo {
 
     private String nodecheckfilename;
 
+    private String productname;
+
     private String nodecheckrecord;
 
     private Date belaidupstarttime;
@@ -92,7 +94,7 @@ public class OrderInfo {
 
     private String invoiceno;
 
-    public OrderInfo(String orderid, String orderno, Long purchasecompanyid, String purchasecompany, Long productid, String erporderno, String createtime, String projectno, String projectname, Integer projectschedule, String productionstate, String productionname, String videofilename, String videofileurl, Date contractapprovaldate, Date deliverytime, String contractfilename, String contractimagecontent, Date rawmaterialtime, Date planbegintime, Date planendtime, Date plannedstarttime, Date plannedendtime, Date actualstarttime, Date actualendtime, String inspectiontype, BigDecimal inspectionquantity, BigDecimal qualifiedquantity, BigDecimal qualifiedrate, String nodecheckfilename, String nodecheckrecord, Date belaidupstarttime, String inspectionreportfilename, String inspectionreport, String batch, Date acceptancetime, BigDecimal inspectiondata, BigDecimal storagequalifiedquantity, BigDecimal storagequalifiedrate, String logisticstype, String billno, String transporttype, String invoicefilename, String invoiceno) {
+    public OrderInfo(String orderid, String orderno, Long purchasecompanyid, String purchasecompany, Long productid, String productname,String erporderno, String createtime, String projectno, String projectname, Integer projectschedule, String productionstate, String productionname, String videofilename, String videofileurl, Date contractapprovaldate, Date deliverytime, String contractfilename, String contractimagecontent, Date rawmaterialtime, Date planbegintime, Date planendtime, Date plannedstarttime, Date plannedendtime, Date actualstarttime, Date actualendtime, String inspectiontype, BigDecimal inspectionquantity, BigDecimal qualifiedquantity, BigDecimal qualifiedrate, String nodecheckfilename, String nodecheckrecord, Date belaidupstarttime, String inspectionreportfilename, String inspectionreport, String batch, Date acceptancetime, BigDecimal inspectiondata, BigDecimal storagequalifiedquantity, BigDecimal storagequalifiedrate, String logisticstype, String billno, String transporttype, String invoicefilename, String invoiceno) {
         this.orderid = orderid;
         this.orderno = orderno;
         this.purchasecompanyid = purchasecompanyid;
@@ -137,10 +139,19 @@ public class OrderInfo {
         this.transporttype = transporttype;
         this.invoicefilename = invoicefilename;
         this.invoiceno = invoiceno;
+        this.productname = productname;
     }
 
     public OrderInfo() {
         super();
+    }
+
+    public String getProductname() {
+        return productname;
+    }
+
+    public void setProductname(String productname) {
+        this.productname = productname;
     }
 
     public String getOrderid() {

@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xinsteel.epaike.dao.OrderInfoMapper" >
-  <resultMap id="BaseResultMap" type="com.xinsteel.epaike.pojo.OrderInfo" >
+  <resultMap id="OrderInfo" type="com.xinsteel.epaike.pojo.OrderInfo" >
     <constructor >
       <idArg column="orderId" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="orderNo" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="purchaseCompanyId" jdbcType="BIGINT" javaType="java.lang.Long" />
       <arg column="purchaseCompany" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="productId" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="productName" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="erpOrderNo" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="createtime" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="projectNo" jdbcType="VARCHAR" javaType="java.lang.String" />
@@ -50,7 +51,7 @@
     </constructor>
   </resultMap>
   <sql id="Base_Column_List" >
-    orderId, orderNo, purchaseCompanyId, purchaseCompany, productId, erpOrderNo, createtime, 
+    orderId, orderNo, purchaseCompanyId, purchaseCompany, productId,productName, erpOrderNo, createtime,
     projectNo, projectName, projectSchedule, productionState, productionName, videoFileName, 
     videoFileUrl, contractApprovalDate, deliveryTime, contractFileName, contractImageContent, 
     rawMaterialTime, planBeginTime, planEndTime, plannedStartTime, plannedEndTime, actualStartTime, 
@@ -59,7 +60,7 @@
     inspectionReport, batch, acceptanceTime, inspectionData, storageQualifiedQuantity, 
     storageQualifiedRate, logisticsType, billNo, transportType, invoiceFileName, invoiceNo
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  <select id="selectByPrimaryKey" resultMap="OrderInfo" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from orderinfo
@@ -71,7 +72,7 @@
   </delete>
   <insert id="insert" parameterType="com.xinsteel.epaike.pojo.OrderInfo" >
     insert into orderinfo (orderId, orderNo, purchaseCompanyId, 
-      purchaseCompany, productId, erpOrderNo, 
+      purchaseCompany, productId, productName,erpOrderNo,
       createtime, projectNo, projectName, 
       projectSchedule, productionState, productionName, 
       videoFileName, videoFileUrl, contractApprovalDate, 
@@ -87,7 +88,7 @@
       transportType, invoiceFileName, invoiceNo
       )
     values (#{orderid,jdbcType=VARCHAR}, #{orderno,jdbcType=VARCHAR}, #{purchasecompanyid,jdbcType=BIGINT}, 
-      #{purchasecompany,jdbcType=VARCHAR}, #{productid,jdbcType=BIGINT}, #{erporderno,jdbcType=VARCHAR}, 
+      #{purchasecompany,jdbcType=VARCHAR}, #{productid,jdbcType=BIGINT}, #{productname,jdbcType=VARCHAR}, #{erporderno,jdbcType=VARCHAR},
       #{createtime,jdbcType=VARCHAR}, #{projectno,jdbcType=VARCHAR}, #{projectname,jdbcType=VARCHAR}, 
       #{projectschedule,jdbcType=INTEGER}, #{productionstate,jdbcType=VARCHAR}, #{productionname,jdbcType=VARCHAR}, 
       #{videofilename,jdbcType=VARCHAR}, #{videofileurl,jdbcType=VARCHAR}, #{contractapprovaldate,jdbcType=TIMESTAMP}, 
@@ -120,6 +121,9 @@
       </if>
       <if test="productid != null" >
         productId,
+      </if>
+      <if test="productname != null" >
+        productName,
       </if>
       <if test="erporderno != null" >
         erpOrderNo,
@@ -255,6 +259,9 @@
       <if test="productid != null" >
         #{productid,jdbcType=BIGINT},
       </if>
+      <if test="productname != null" >
+        #{productname,jdbcType=BIGINT},
+      </if>
       <if test="erporderno != null" >
         #{erporderno,jdbcType=VARCHAR},
       </if>
@@ -389,6 +396,9 @@
       <if test="productid != null" >
         productId = #{productid,jdbcType=BIGINT},
       </if>
+      <if test="productname != null" >
+        productName = #{productname,jdbcType=BIGINT},
+      </if>
       <if test="erporderno != null" >
         erpOrderNo = #{erporderno,jdbcType=VARCHAR},
       </if>
@@ -515,6 +525,7 @@
       purchaseCompanyId = #{purchasecompanyid,jdbcType=BIGINT},
       purchaseCompany = #{purchasecompany,jdbcType=VARCHAR},
       productId = #{productid,jdbcType=BIGINT},
+      productName = #{productname,jdbcType=BIGINT},
       erpOrderNo = #{erporderno,jdbcType=VARCHAR},
       createtime = #{createtime,jdbcType=VARCHAR},
       projectNo = #{projectno,jdbcType=VARCHAR},
@@ -556,4 +567,8 @@
       invoiceNo = #{invoiceno,jdbcType=VARCHAR}
     where orderId = #{orderid,jdbcType=VARCHAR}
   </update>
+  <select id="selectAllOrderInfo" resultMap="OrderInfo">
+    SELECT *FROM orderinfo
+  </select>
+
 </mapper>
