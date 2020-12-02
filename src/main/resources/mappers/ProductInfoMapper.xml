@@ -70,16 +70,27 @@
     </trim>
   </insert>
 
-  <select id="selectAllProductInfo" resultMap="ProductInfo">
+  <select id="selectAllProductInfo"  resultMap="ProductInfo">
     SELECT *FROM productinfo
   </select>
 
-  <select id="selectApiMaterNoListByOrderId" resultType="java.util.List">
+  <select id="selectApiMaterNoListByOrderId" parameterType="java.lang.String" resultType="java.lang.String">
     SELECT apimaterNo FROM productinfo
     WHERE orderId = #{orderId}
   </select>
-  <select id="selectProductInfoByApiMaterNo" resultMap="ProductInfo">
+  <select id="selectProductInfoByApiMaterNo" parameterType="java.lang.String" resultMap="ProductInfo">
     SELECT * FROM productinfo
+    WHERE apimaterNo = #{apiMaterNo} and orderId = #{orderId}
+  </select>
+  <select id="selectProductSkuIdByOrderId" parameterType="java.lang.String" resultType="java.lang.String">
+    SELECT productSkuId FROM productinfo
+    WHERE orderId = #{orderId}
+  </select>
+  <select id="selectAllApiMaterNo" resultType="java.lang.String">
+    SELECT DISTINCT apimaterNo FROM productInfo
+  </select>
+  <select id="selectProductQuantityByApiMaterNo" resultType="java.lang.Double" parameterType="java.lang.String">
+    SELECT  SUM(productQuantity) AS 'productQuantity' FROM productinfo
     WHERE apimaterNo = #{apiMaterNo}
   </select>
 </mapper>

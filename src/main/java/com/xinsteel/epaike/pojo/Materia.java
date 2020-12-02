@@ -3,7 +3,6 @@ package com.xinsteel.epaike.pojo;
 import java.math.BigDecimal;
 
 public class Materia {
-    private String apimaterno;
 
     private String materialno;
 
@@ -21,8 +20,7 @@ public class Materia {
 
     private String specifications;
 
-    public Materia(String apimaterno, String materialno, String materialname, String suppliercompanyname, BigDecimal quantity, String materialunit, BigDecimal materialquantity, BigDecimal rawmaterialofuse, String specifications) {
-        this.apimaterno = apimaterno;
+    public Materia( String materialno, String materialname, String suppliercompanyname, BigDecimal quantity, String materialunit, BigDecimal materialquantity, BigDecimal rawmaterialofuse, String specifications) {
         this.materialno = materialno;
         this.materialname = materialname;
         this.suppliercompanyname = suppliercompanyname;
@@ -35,14 +33,6 @@ public class Materia {
 
     public Materia() {
         super();
-    }
-
-    public String getApimaterno() {
-        return apimaterno;
-    }
-
-    public void setApimaterno(String apimaterno) {
-        this.apimaterno = apimaterno == null ? null : apimaterno.trim();
     }
 
     public String getMaterialno() {

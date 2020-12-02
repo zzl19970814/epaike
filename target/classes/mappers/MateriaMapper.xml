@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xinsteel.epaike.dao.MateriaMapper" >
-  <resultMap id="BaseResultMap" type="com.xinsteel.epaike.pojo.Materia" >
+  <resultMap id="Materia" type="com.xinsteel.epaike.pojo.Materia" >
     <constructor>
-      <arg column="apimaterNo" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="materialNo" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="materialName" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="supplierCompanyName" jdbcType="VARCHAR" javaType="java.lang.String" />
@@ -15,11 +14,11 @@
     </constructor>
   </resultMap>
   <insert id="insert" parameterType="com.xinsteel.epaike.pojo.Materia" >
-    insert into materia (apimaterNo, materialNo, materialName, 
+    insert into materia ( materialNo, materialName,
       supplierCompanyName, quantity, materialUnit, 
       materialQuantity, rawMaterialOfUse, specifications
       )
-    values (#{apimaterno,jdbcType=VARCHAR}, #{materialno,jdbcType=VARCHAR}, #{materialname,jdbcType=VARCHAR}, 
+    values ( #{materialno,jdbcType=VARCHAR}, #{materialname,jdbcType=VARCHAR},
       #{suppliercompanyname,jdbcType=VARCHAR}, #{quantity,jdbcType=DECIMAL}, #{materialunit,jdbcType=VARCHAR}, 
       #{materialquantity,jdbcType=DECIMAL}, #{rawmaterialofuse,jdbcType=DECIMAL}, #{specifications,jdbcType=VARCHAR}
       )
@@ -27,9 +26,6 @@
   <insert id="insertSelective" parameterType="com.xinsteel.epaike.pojo.Materia" >
     insert into materia
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="apimaterno != null" >
-        apimaterNo,
-      </if>
       <if test="materialno != null" >
         materialNo,
       </if>
@@ -56,9 +52,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="apimaterno != null" >
-        #{apimaterno,jdbcType=VARCHAR},
-      </if>
       <if test="materialno != null" >
         #{materialno,jdbcType=VARCHAR},
       </if>
@@ -85,4 +78,12 @@
       </if>
     </trim>
   </insert>
+  <select id="selectMaterialByMaterialNo" parameterType="java.lang.String" resultMap="Materia">
+    SELECT * FROM materia
+    WHERE materialNo = #{materialno}
+  </select>
+
+  <select id="selectAllMaterialNo" resultType="java.lang.String" >
+    SELECT materialNo FROM materia
+  </select>
 </mapper>

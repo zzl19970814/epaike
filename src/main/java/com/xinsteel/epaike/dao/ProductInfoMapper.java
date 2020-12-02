@@ -19,5 +19,11 @@ public interface ProductInfoMapper {
 
     List selectApiMaterNoListByOrderId(String orderId);
 
-    ProductInfo selectProductInfoByApiMaterNo(String apiMaterNo);
+    ProductInfo selectProductInfoByApiMaterNo(String apiMaterNo, String orderId);
+
+    List selectProductSkuIdByOrderId(String orderId);
+
+    List selectAllApiMaterNo();
+
+    Double selectProductQuantityByApiMaterNo(String apiMaterNo);
 }

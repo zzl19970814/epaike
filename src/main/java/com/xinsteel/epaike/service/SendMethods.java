@@ -3,10 +3,13 @@ package com.xinsteel.epaike.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.databind.node.DecimalNode;
 import com.pcitc.apiapplication.service.api.dto.EpecResult;
 import com.pcitc.apiapplication.service.api.ssl.EpecApiUtil;
+import com.xinsteel.epaike.dao.MateriaMapper;
 import com.xinsteel.epaike.dao.OrderInfoMapper;
 import com.xinsteel.epaike.dao.ProductInfoMapper;
+import com.xinsteel.epaike.pojo.Materia;
 import com.xinsteel.epaike.pojo.OrderInfo;
 import com.xinsteel.epaike.pojo.ProductInfo;
 import com.xinsteel.epaike.utils.ConstantPropertiesUtils;
@@ -25,6 +28,8 @@ public class SendMethods {
     private static List<Map<String, String>> Message_List ;
     private static List<String> API_MATER_NO_LIST = new ArrayList<>();
 
+    @Autowired
+    private MateriaMapper materiaMapper;
 
     @Autowired
     private ProductInfoMapper productInfoMapper;
@@ -39,6 +44,7 @@ public class SendMethods {
         sendMethods = this;
         sendMethods.orderInfoMapper = this.orderInfoMapper;
         sendMethods.productInfoMapper = this.productInfoMapper;
+        sendMethods.materiaMapper = this.materiaMapper;
     }
 
 
@@ -339,9 +345,12 @@ public class SendMethods {
      * 调用保存仓储信息的方法
      */
     public static void autoSavePlaceInfo(){
-        for (String s : API_MATER_NO_LIST
-        ) {
-            saveEnterprisePlaceInfo(s);
+        List apiMaterNoList = sendMethods.productInfoMapper.selectAllApiMaterNo();
+        for (int i = 0; i < apiMaterNoList.size(); i++) {
+            if (apiMaterNoList.get(i).toString().equals("510100121200")){
+
+                saveEnterprisePlaceInfo(apiMaterNoList.get(i).toString());
+            }
         }
     }
     /**
@@ -353,7 +362,8 @@ public class SendMethods {
         data.put("corpcode", ConstantPropertiesUtils.CLIENT_ID);
         data.put("productplace", "新钢公司");
         // 产品仓储数量
-        data.put("productquantity", 200);
+        Double productquantity = sendMethods.productInfoMapper.selectProductQuantityByApiMaterNo(apiMaterNo);
+        data.put("productquantity", productquantity);
         data.put("productUnit", "吨");
 
         String url = "/v2/supplychain/saveEnterprisePlaceInfo";
@@ -372,37 +382,40 @@ public class SendMethods {
     public static void autoSaveMaterial(){
         // xg
         List<ProductInfo> resultList = sendMethods.productInfoMapper.selectAllProductInfo();
-        for (ProductInfo productInfo:
-                resultList) {
-            saveEnterpriseMaterial(productInfo.getApimaterno());
+        for (int i = 0; i < resultList.size(); i++) {
+
+            List materialNoList = sendMethods.materiaMapper.selectAllMaterialNo();
+            for (int j = 0; j <materialNoList.size() ; j++) {
+                saveEnterpriseMaterial(resultList.get(i).getApimaterno(),materialNoList.get(j).toString());
+            }
         }
+
 
     }
     /**
      * 根据产品代码上传 企业原材料信息
      */
-    public static String saveEnterpriseMaterial(String apiMaterNo){
+    public static String saveEnterpriseMaterial(String apiMaterNo, String materialno){
         Map<String, Object> data = new HashMap<>();
         data.put("apimaterno", apiMaterNo);
         data.put("corpcode", ConstantPropertiesUtils.CLIENT_ID);
 
+        Materia materia = sendMethods.materiaMapper.selectMaterialByMaterialNo(materialno);
+
         //原材料产地(巴西)
-        data.put("materialarea", "暂无");
+        data.put("materialarea", materia.getSuppliercompanyname());
         // 原材料成分(钢)
         data.put("materialcompose", "暂无");
         // 原材料名称(钢材)
-        data.put("materialname", "煤炭");
+        data.put("materialname", materia.getMaterialname());
         // 原材料编码(1002A001)
-        data.put("materialno", "0001");
+        data.put("materialno", materia.getMaterialno());
         // 原材料计量单位
-        data.put("materialunit", "吨");
+        data.put("materialunit", materia.getMaterialunit());
         // 原材料采购数量
-        data.put("quantity", 100);
+        data.put("quantity", materia.getMaterialquantity());
 
-        data.put("supplierCompanyName", "中石化");
-
-
-
+        data.put("supplierCompanyName", materia.getSuppliercompanyname());
 
         String url = "/v2/supplychain/saveEnterpriseMaterial";
         JSONObject jsonObj=new JSONObject(data);
@@ -416,13 +429,21 @@ public class SendMethods {
         return utilsStr;
     }
 
-    public static String saveEnterpriseMateriaPlace(){
+    public static void startEnterpriseMateriaPlace(){
+        List list = sendMethods.materiaMapper.selectAllMaterialNo();
+        for (int i = 0; i <  list.size(); i++) {
+            saveEnterpriseMateriaPlace(list.get(i).toString());
+        }
+    }
+
+    public static String saveEnterpriseMateriaPlace(String materialno){
         Map<String, Object> data = new HashMap<>();
         data.put("corpcode", ConstantPropertiesUtils.CLIENT_ID);
-        data.put("materialno","0001");
+        data.put("materialno",materialno);
+        Materia materia = sendMethods.materiaMapper.selectMaterialByMaterialNo(materialno);
         data.put("materialPlace","新钢");
-        data.put("materialQuantity",200);
-        data.put("materialUnit","吨");
+        data.put("materialQuantity",materia.getMaterialquantity());
+        data.put("materialUnit", materia.getMaterialunit());
 
         String url = "/v2/supplychain/saveEnterpriseMateriaPlace";
         JSONObject jsonObj=new JSONObject(data);
@@ -677,7 +698,7 @@ public class SendMethods {
 
         // MES系统数据
         data.put("apimaterno", apiMaterNo);
-        ProductInfo productInfo = sendMethods.productInfoMapper.selectProductInfoByApiMaterNo(apiMaterNo);
+        ProductInfo productInfo = sendMethods.productInfoMapper.selectProductInfoByApiMaterNo(apiMaterNo, orderId);
         data.put("apimatername", productInfo.getApimatername());
 
         data.put("productid", orderInfo.getProductid());
@@ -923,7 +944,7 @@ public class SendMethods {
         //物料品类数(物料明细总数量)
 
         // TODO 原料信息
-        data.put("materialquantity", 200);
+        data.put("materialquantity", 7);
 
         String url = "/v2/supplychain/saveOrderMaterialSurvey";
 
@@ -947,7 +968,11 @@ public class SendMethods {
 
         List orderId = getOrderId();
         for (int i = 0; i < orderId.size(); i++) {
-            saveOrderMaterialDetail(orderId.get(i).toString());
+            List list = sendMethods.materiaMapper.selectAllMaterialNo();
+            for (int j = 0; j < list.size(); j++) {
+
+                saveOrderMaterialDetail(orderId.get(i).toString(), list.get(j).toString(), j+1+"");
+            }
         }
        /* for (Map<String, String> orderInfo : Message_List
         ) {
@@ -959,7 +984,7 @@ public class SendMethods {
     /**
      * 原材料采购详情
      */
-    public static void saveOrderMaterialDetail(String orderId){
+    public static void saveOrderMaterialDetail(String orderId, String materialNo, String serialNumber){
         Map<String, Object> data = new HashMap<>();
         data.put("orderId",orderId);
 
@@ -972,27 +997,28 @@ public class SendMethods {
         data.put("suppliercompanyid", ConstantPropertiesUtils.COMPANY_ID);
 
         //序号
-        data.put("serialNumber", 1);
+        data.put("serialNumber", serialNumber);
         // 设计某个值
         data.put("nodecode",3);
-        // 原材料名称
-        data.put("materialName","煤炭");
         // 企业物料编码
-        data.put("materialNo","0001");
+        data.put("materialNo",materialNo);
+        Materia materia = sendMethods.materiaMapper.selectMaterialByMaterialNo(materialNo);
+        // 原材料名称
+        data.put("materialName",materia.getMaterialname());
         // 原材料使用数量
-        data.put("rawMaterialOfUse",200);
+        data.put("rawMaterialOfUse",materia.getRawmaterialofuse());
         // 原材料合格证书文件名称(图片名称，且带图片后缀)
         data.put("certificateFileName","one.jpg");
         // 原材料合格证书（图片）(Base64编码) (非必填)
-        data.put("materialCertificate","data:image/jpeg;base64,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");
+        data.put("materialCertificate","");
         // 原材料出厂报文件名称(图片名称，且带图片后缀
         data.put("reportFileName","two.jpg");
         //原材料出厂报告（图片）非必填（Base64编码）
-        data.put("materialReport","data:image/jpeg;base64,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");
+        data.put("materialReport","");
         // 原材料供应商名称
-        data.put("supplierCompanyName","中石化");
+        data.put("supplierCompanyName",materia.getSuppliercompanyname());
         // 规格型号
-        data.put("specifications","0-25mm");
+        data.put("specifications",materia.getSpecifications());
 
         String url = "/v2/supplychain/saveOrderMaterialDetail";
 
@@ -1042,7 +1068,7 @@ public class SendMethods {
 
 
         data.put("nodecode", 4);
-        ProductInfo productInfo = sendMethods.productInfoMapper.selectProductInfoByApiMaterNo(apiMaterNo);
+        ProductInfo productInfo = sendMethods.productInfoMapper.selectProductInfoByApiMaterNo(apiMaterNo, orderId);
         data.put("apimatername",productInfo.getApimatername());
         data.put("apimaterno", apiMaterNo);
 
@@ -1242,7 +1268,7 @@ public class SendMethods {
         data.put("batch", batch);
         // 验收时间
         data.put("acceptanceTime", orderInfo.getAcceptancetime());
-        ProductInfo productInfo = sendMethods.productInfoMapper.selectProductInfoByApiMaterNo(apiMaterNo);
+        ProductInfo productInfo = sendMethods.productInfoMapper.selectProductInfoByApiMaterNo(apiMaterNo, orderId);
         // 检验数据
         data.put("inspectionData",productInfo.getProductquantity());
         // 合格数量
@@ -1331,7 +1357,14 @@ public class SendMethods {
     public static void autoSaveOrderProductInfoNo3d(){
         List orderId = getOrderId();
         for (int i = 0; i < orderId.size(); i++) {
-            saveOrderProductInfoNo3d(orderId.get(i).toString());
+            List productSkuId = sendMethods.productInfoMapper.selectProductSkuIdByOrderId(orderId.get(i).toString());
+            for (int j = 0; j < productSkuId.size(); j++) {
+                List materialNoList = sendMethods.materiaMapper.selectAllMaterialNo();
+                for (int k = 0; k < materialNoList.size() ; k++) {
+
+                    saveOrderProductInfoNo3d(orderId.get(i).toString(), productSkuId.get(j).toString(), materialNoList.get(k).toString());
+                }
+            }
         }
         /*for (Map<String, String> orderInfo : Message_List
         ) {
@@ -1345,7 +1378,7 @@ public class SendMethods {
      * 订单产品展示信息上传接口
      * @param orderId
      */
-    public static void saveOrderProductInfoNo3d(String orderId){
+    public static void saveOrderProductInfoNo3d(String orderId, String productSkuId, String materialNo){
         Map<String, Object> data = new HashMap<>();
         data.put("orderId",orderId);
 
@@ -1358,8 +1391,8 @@ public class SendMethods {
 
 
 
-        data.put("productSkuId", getYiPaiKeOrderInfo(orderId).get("productskuid"));
-        data.put("productName",getYiPaiKeOrderInfo(orderId).get("productname"));
+        data.put("productSkuId", productSkuId);
+        data.put("productName", orderInfo.getProductname());
 
         // 文件名称(图片名称，且带图片后缀)
         data.put("fileName","one.jpg");
@@ -1367,21 +1400,17 @@ public class SendMethods {
         data.put("imageUrl","https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png");
 
         // TODO 商品原材料编码（企业）
-        data.put("materialNo","0001");
+        data.put("materialNo",materialNo);
+        Materia materia = sendMethods.materiaMapper.selectMaterialByMaterialNo(materialNo);
         // 商品原材料名称
-        data.put("materialName","煤炭");
+        data.put("materialName", materia.getMaterialname());
         // 原材料用量
-        data.put("quantity",200);
+        data.put("quantity", materia.getMaterialquantity());
         // 原材料单位
-        data.put("materialUnit","吨");
+        data.put("materialUnit",materia.getMaterialunit());
 
         // 原材料供应商名称
-        data.put("supplierCompanyName","中石化");
-
-
-
-
-
+        data.put("supplierCompanyName", materia.getSuppliercompanyname());
 
         String url = "/v2/supplychain/saveOrderProductInfoNo3d";
 
@@ -1400,11 +1429,15 @@ public class SendMethods {
      * 物流跟踪信息上传接口
      */
     public static void autoSaveOrderLogisticsInfo(){
-        for (Map<String, String> orderInfo : Message_List
+        List orderId = getOrderId();
+        for (int i = 0; i <  orderId.size(); i++) {
+            saveOrderLogisticsInfo(orderId.get(i).toString());
+        }
+        /*for (Map<String, String> orderInfo : Message_List
         ) {
             String orderId = orderInfo.get("orderId");
             saveOrderLogisticsInfo(orderId);
-        }
+        }*/
     }
     /**
      * 物流跟踪信息上传接口
@@ -1414,22 +1447,24 @@ public class SendMethods {
     public static void saveOrderLogisticsInfo(String orderId){
         Map<String, Object> data = new HashMap<>();
         data.put("orderId",orderId);
-        data.put("purchasecompanyid", getYiPaiKeOrderInfo(orderId).get("purchasecompanyid"));
+        OrderInfo orderInfo = sendMethods.orderInfoMapper.selectByPrimaryKey(orderId);
+
+        data.put("purchasecompanyid", orderInfo.getPurchasecompanyid());
         data.put("suppliercompanyid", ConstantPropertiesUtils.COMPANY_ID);
 
         // 阶段编号
         data.put("eventNumber",1);
 
-        Date date = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        Date date = new Date();
+//        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         // 阶段时间
-        data.put("eventTime",formatter.format(date));
+        data.put("eventTime", orderInfo.getBelaidupstarttime());
         // 阶段地点
         data.put("eventPlace","新钢");
         // TODO 物流单号
-        data.put("billNo","0001");
+        data.put("billNo",orderInfo.getBillno());
         // 运输方式
-        data.put("tansportType","4");
+        data.put("tansportType",orderInfo.getTransporttype());
 
 
 
