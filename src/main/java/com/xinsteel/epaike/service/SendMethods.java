@@ -383,10 +383,13 @@ public class SendMethods {
         // xg
         List<ProductInfo> resultList = sendMethods.productInfoMapper.selectAllProductInfo();
         for (int i = 0; i < resultList.size(); i++) {
+            if(resultList.get(i).getApimaterno().toString().equals("510100121200")){
 
-            List materialNoList = sendMethods.materiaMapper.selectAllMaterialNo();
-            for (int j = 0; j <materialNoList.size() ; j++) {
-                saveEnterpriseMaterial(resultList.get(i).getApimaterno(),materialNoList.get(j).toString());
+                List materialNoList = sendMethods.materiaMapper.selectAllMaterialNo();
+                for (int j = 0; j <materialNoList.size() ; j++) {
+
+                    saveEnterpriseMaterial(resultList.get(i).getApimaterno(),materialNoList.get(j).toString());
+                }
             }
         }
 
@@ -663,7 +666,12 @@ public class SendMethods {
         params.put("access_token",ACCESS_TOKEN);
         params.put("data", jsonObj.toString());
 
-        String utilsStr = utils(url, params);
+        EpecResult result= EpecApiUtil.invokeAPI(ConstantPropertiesUtils.URL+url, ACCESS_TOKEN,jsonObj.toString());
+        if(result.isSuccess()){
+            System.out.println(JSON.toJSON(result));
+        }
+
+//        String utilsStr = utils(url, params);
     }
 
     /**

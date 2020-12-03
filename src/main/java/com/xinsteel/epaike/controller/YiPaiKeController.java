@@ -79,9 +79,8 @@ public class YiPaiKeController {
     /**
      * 企业原材料信息
      * getMessage后调用
-     * 缺少企业物料信息
      */
-    @GetMapping("/saveEnterpriseMaterial")
+        @GetMapping("/saveEnterpriseMaterial")
     public void saveEnterpriseMaterial(){
         SendMethods.autoSaveMaterial();
 
@@ -89,7 +88,6 @@ public class YiPaiKeController {
 
     /**
      * 原材料仓储
-     * 缺少原材料编码
      */
     @GetMapping("/saveEnterpriseMateriaPlace")
     public void saveEnterpriseMateriaPlace(){
@@ -126,7 +124,6 @@ public class YiPaiKeController {
     /**
      * 合同签订概况接口
      * getMessage后调用
-     * 扩展名过长
      */
     @GetMapping("/saveOrderContractInfo")
     public void saveOrderContractInfo(){
