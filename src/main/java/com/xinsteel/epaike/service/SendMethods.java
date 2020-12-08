@@ -244,14 +244,16 @@ public class SendMethods {
      */
     public static void uploadMaterInfo(){
         List<ProductInfo> resultList = sendMethods.productInfoMapper.selectAllProductInfo();
+        int count = 0;
         for (ProductInfo productInfo:
                 resultList){
             Long productSkuId = productInfo.getProductskuid();
             String apiMaterName = productInfo.getApimatername();
             String apiMaterNo = productInfo.getApimaterno();
             if(productSkuId==79000012) {
-                saveEnterpriseMaterInfo(apiMaterName,apiMaterNo, productSkuId);
+                saveEnterpriseMaterInfo(apiMaterName,apiMaterNo, productSkuId, count);
             }
+            count++;
         }
     }
 
@@ -262,7 +264,7 @@ public class SendMethods {
      * @param productSkuId 易派客单品id
      * @return
      */
-    public static String saveEnterpriseMaterInfo(String apiMaterName, String apiMaterNo, Long productSkuId) {
+    public static String saveEnterpriseMaterInfo(String apiMaterName, String apiMaterNo, Long productSkuId, int count) {
         // data 的json
         Map<String, Object> data = new HashMap<>();
         data.put("corpcode", ConstantPropertiesUtils.CLIENT_ID);
@@ -271,7 +273,9 @@ public class SendMethods {
 
         data.put("productskuid", productSkuId);
         data.put("suppliercompanyid", ConstantPropertiesUtils.COMPANY_ID);
-        data.put("defaultProduct",1);
+        if (count == 0){
+            data.put("defaultProduct",1);
+        }
 
         String url = "/v2/supplychain/saveEnterpriseMaterInfo";
         JSONObject jsonObj=new JSONObject(data);
