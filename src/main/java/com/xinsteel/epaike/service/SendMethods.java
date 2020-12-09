@@ -505,7 +505,7 @@ public class SendMethods {
         // 文件名称(图片名称，且带图片后缀，唯一性)
         data.put("filename", apiMaterNo+".jpg");
         //文件类型(1:检测报告,2:工艺流程)
-        short i = 1;
+        short i = 2;
         data.put("fileType", i);
         // 图片内容(传图片时为必填，将图片转为base64后再传输)
 
